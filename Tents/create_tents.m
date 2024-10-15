@@ -14,7 +14,7 @@ function [tents,nodes,tentDependencies] = create_tents(Dati)
     height = [nodes(t,1),nodes(t,2),nodes(t+1,1)];
     Tent = StructTent(x_cord, height);
     tents = [];
-    tents(end+1,:,:) = Tent;
+    tents(:,:,1) = Tent;
     while(t <= max_it-1)
         x_cord = [nodes(1,1),nodes(1,2)];
         if rem(t,2)==0 && t>2
@@ -22,7 +22,7 @@ function [tents,nodes,tentDependencies] = create_tents(Dati)
                 x_cord = [nodes(1,i),nodes(1,i+1),nodes(1,i+2)];
                 height = [nodes(t,i),nodes(t-1,i+1),nodes(t,i+2),nodes(t+1,i+1)];
                 Tent = StructTent(x_cord, height);
-                tents(end+1,:,:) = Tent;
+                tents(:,:,end+1) = Tent;
             end
         elseif rem(t,2)>0 && t>2
             for i=2:2:(x_dim-2)
@@ -30,12 +30,12 @@ function [tents,nodes,tentDependencies] = create_tents(Dati)
                     x_cord = [nodes(1,i),nodes(1,i+1),nodes(1,i+2)];
                     height = [nodes(t,i),nodes(t+1,i+1),nodes(t,i+2)];
                     Tent = StructTent(x_cord, height);
-                    tents(end+1,:,:) = Tent;
+                    tents(:,:,end+1) = Tent;
                 else
                     x_cord = [nodes(1,i),nodes(1,i+1),nodes(1,i+2)];
                     height = [nodes(t,i),nodes(t-1,i+1),nodes(t,i+2),nodes(t+1,i+1)];
                     Tent = StructTent(x_cord, height);
-                    tents(end+1,:,:) = Tent;
+                    tents(:,:,end+1) = Tent;
                 end
             end
         end
@@ -43,25 +43,25 @@ function [tents,nodes,tentDependencies] = create_tents(Dati)
            x_cord = [nodes(1,1),nodes(1,2)];
            height = [nodes(t-1,1),nodes(t,2),nodes(t+1,1)];
            Tent = StructTent(x_cord, height);
-           tents(end+1,:,:) = Tent;
+           tents(:,:,end+1) = Tent;
         end
         if t>2 && rem(t,2)>0
            x_cord = [nodes(1,end-1),nodes(1,end)];
            height = [nodes(t,end-1),nodes(t-1,end),nodes(t+1,end)];
            Tent = StructTent(x_cord, height);
-           tents(end+1,:,:) = Tent;
+           tents(:,:,end+1) = Tent;
         end
         t = t+1;
     end
     x_cord = [nodes(1,1),nodes(1,2)];
     height = [nodes(t,1),nodes(t-1,1),nodes(t,2)];
     Tent = StructTent(x_cord, height);
-    tents(end+1,:,:) = Tent;
+    tents(:,:,end+1) = Tent;
     for i=2:2:(x_dim-2)
         x_cord = [nodes(1,i),nodes(1,i+1),nodes(1,i+2)];
         height = [nodes(t,i),nodes(t-1,i+1),nodes(t,i+2)];
         Tent = StructTent(x_cord, height);
-        tents(end+1,:,:) = Tent;
+        tents(:,:,end+1) = Tent;
     end
     tentDependencies = findTentDependencies(tents,n_even,n_odd);
 end

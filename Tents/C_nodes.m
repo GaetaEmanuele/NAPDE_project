@@ -1,8 +1,8 @@
 function [nodes,n_even,n_odd] = C_nodes(x,T,c,N)
     Jodd = x(2:2:end);
     Jeven = x(1:2:end);
-    n_even = fix(length(Jeven)/3) +1 ;
-    n_odd = fix(length(Jeven)/3) +1 ;
+    n_even = ceil(length(x)/3) +1 ;
+    n_odd = ceil(length(x)/3) +1 ;
     Nl = neib_nodes(x);
     MapOdd = @(t) 2*t;
     MapEven = @(t) 2*t -1;

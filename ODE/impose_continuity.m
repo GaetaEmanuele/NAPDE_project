@@ -1,6 +1,6 @@
 function [u0,v0] = impose_continuity(dependence,list_U,list_V,x)
     %select the tents
-    index_tent = dependence(:,1);
+    index_tent = dependence;
     index_tent = index_tent(index_tent>0);
     U_selected = list_U(index_tent);
     V_selected = list_V(index_tent);
@@ -15,8 +15,8 @@ function [u0,v0] = impose_continuity(dependence,list_U,list_V,x)
         U2 = U_selected{2};
         V1 = V_selected{1};
         V2 = V_selected{2};
-        u0 = [U1(index:end,end),U2(1:index,end)];
-        v0 = [V1(index:end,end),V2(1:index,end)];
+        u0 = [U1(index:end,end);U2(2:index,end)];
+        v0 = [V1(index:end,end);V2(2:index,end)];
     else
         U = U_selected{1};
         V = V_selected{1};

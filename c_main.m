@@ -17,14 +17,13 @@ Dati  = C_dati();
 U = {};
 V = {};
 C_plot(nodes,Dati);
-I_max = size(tents,1);
+I_max = size(tents,3);
 delta = zeros(1,I_max);
 %solve the problem in each tent
-Tent = zeros(4,2);
 for i=1:I_max
     %selection of valid value since -1 is a defualt value 
-    time = tents(i,:,2);
-    x_ = tents(i,:,1);
+    time = tents(:,2,i);
+    x_ = tents(:,1,i);
     acceptable_x = x_(x_>-1);
     acceptable_time = time(time>=0);
     tau = min(acceptable_time);
@@ -36,9 +35,9 @@ for i=1:I_max
     %solve the problem in Ki_hat
     bd_cond = check_bd_condition(acceptable_x,x_hat(1),x_hat(end));
     
-    [U_hat_i,V_hat_i] = solver(Dati,bd_cond,tentDependencies(i,:,:),U,V,x_hat,t_hat);
-    U{end} = U_hat_i;
-    V{end} = V_hat_i;
+    [U_hat_i,V_hat_i] = solver(Dati,bd_cond,tentDependencies(i,:),U,V,x_hat,t_hat,delta(i));
+    U{end+1} = U_hat_i;
+    V{end+1} = V_hat_i;
     %map back the solution
 end
 end

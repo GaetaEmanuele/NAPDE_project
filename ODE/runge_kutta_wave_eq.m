@@ -1,9 +1,10 @@
-function [U,V]=runge_kutta_wave_eq(Dati,Matrices,bd_cond,x,dependence,list_U ,list_V,t_hat)
+function [U,V]=runge_kutta_wave_eq(Dati,Matrices,bd_cond,x,dependence,list_U ,list_V,t_hat,delta)
     % load the data from Matrices and Dati
     c = Dati.c; 
     M = Matrices.M; 
     A = Matrices.A;
     D = A;
+    f = Matrices.f;
     %only if we want to use Sommerfeld bd
     if strcmp(bd_cond.field1,'Sommerfeld') || strcmp(bd_cond.field2,'Sommerfeld')
         D = Matrices.D;
@@ -34,7 +35,7 @@ function [U,V]=runge_kutta_wave_eq(Dati,Matrices,bd_cond,x,dependence,list_U ,li
     V(:,1) = v0;
 
     % Time forcing
-    F = Matrices.f*inline(Dati.force_time,'t'); 
+    F = inline(Dati.force_time,'t'); 
     
     g = inline(Dati.boundary_cond,'x');
     g_t = inline(Dati.boundary_cond_time,'t');
@@ -45,17 +46,17 @@ function [U,V]=runge_kutta_wave_eq(Dati,Matrices,bd_cond,x,dependence,list_U ,li
         Yi = Y(:,n);
         
         % evalution of the RK43 coffiecent
-        k1 = rk4_step(Yi, ti, M, A, c, F,delta,g,g_t,x,bd_cond);
-        k2 = rk4_step(Yi + 0.5 * dt * k1, ti + 0.5 * dt, M, A, c, F,delta,g,g_t,x,bd_cond);
-        k3 = rk4_step(Yi + 0.5 * dt * k2, ti + 0.5 * dt, M, A, c, F,delta,g,g_t,x,bd_cond);
-        k4 = rk4_step(Yi + dt * k3, ti + dt, M, A, c, F,delta,g,g_t,x,bd_cond);
+        k1 = rk4_step(Yi, ti, M, A, c, F,f,delta,g,g_t,x,bd_cond);
+        k2 = rk4_step(Yi + 0.5 * dt * k1, ti + 0.5 * dt, M, A, c, F,f,delta,g,g_t,x,bd_cond);
+        k3 = rk4_step(Yi + 0.5 * dt * k2, ti + 0.5 * dt, M, A, c, F,f,delta,g,g_t,x,bd_cond);
+        k4 = rk4_step(Yi + dt * k3, ti + dt, M, A, c, F,f,delta,g,g_t,x,bd_cond);
         
         % update the solution
         Y(:,n+1) = Yi + (dt / 6) * (k1 + 2*k2 + 2*k3 + k4);
         
 
         % split u and v
-        U(:,n+1) = Y(1:length(u0),n+1) + ug;
+        U(:,n+1) = Y(1:length(u0),n+1);
         V(:,n+1) = Y(length(u0)+1:end, n+1);
     end
    
